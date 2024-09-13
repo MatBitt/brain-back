@@ -9,9 +9,9 @@
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>primos</groupId>
-	<artifactId>sistema-escolas</artifactId>
+	<artifactId>brain</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<name>sistema-escolas</name>
+	<name>brain</name>
 	<description>Sistema de gerenciamento de escolas</description>
 	<properties>
 		<java.version>17</java.version>
