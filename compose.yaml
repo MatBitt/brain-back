@@ -8,8 +8,7 @@ services:
       - POSTGRES_DB=escola
 
   app:
-    build:
-      context: .
+    image: brain-back-app
     restart: unless-stopped
     container_name: brain-back-app
     environment:
