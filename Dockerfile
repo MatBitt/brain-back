@@ -6,10 +6,8 @@ COPY pom.xml .
 COPY src src
 RUN chmod +x mvnw
 RUN ./mvnw package -DskipTests
-RUN ls -l target
-COPY target/brain-0.0.1-SNAPSHOT.jar application.jar
-# ARG JAR_FILE=target/*.jar
-# COPY ${JAR_FILE} application.jar
+ARG JAR_FILE=./target/*.jar
+COPY ${JAR_FILE} application.jar
 RUN java -Djarmode=layertools -jar application.jar extract
 
 
