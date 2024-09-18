@@ -6,7 +6,9 @@ COPY pom.xml .
 COPY src src
 RUN chmod +x mvnw
 RUN ./mvnw package -DskipTests
-COPY target/*.jar application.jar
+RUN ls -l target
+ARG JAR_FILE=target/*.jar
+COPY ${JAR_FILE} application.jar
 RUN java -Djarmode=layertools -jar application.jar extract
 
 
