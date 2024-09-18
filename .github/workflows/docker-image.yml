@@ -15,4 +15,4 @@ jobs:
     steps:
     - uses: actions/checkout@v4
     - name: Build the Docker image
-      run: docker build . --file Dockerfile --tag matbitt/brain-back-app
+      run: docker build -t matbitt/brain-back-app .
