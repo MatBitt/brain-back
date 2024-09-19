@@ -4,9 +4,18 @@ import java.sql.Date;
 
 import br.com.brain.domain.endereco.Endereco;
 
-public record DadosDetalhamentoAluno(String cpf, String matricula, String nome, Date dataDeNascimento, String email, Endereco endereco) {
+public record DadosDetalhamentoAluno(String cpf, String rg, String matricula, String nome, String nomeSocial,
+        Date dataDeNascimento, String email, Endereco endereco) {
 
     public DadosDetalhamentoAluno(Aluno aluno) {
-        this(aluno.getCpf(), aluno.getMatricula(), aluno.getNome(), aluno.getDataDeNascimento(), aluno.getEmail(), aluno.getEndereco());
+        this(
+                aluno.getCpf(),
+                aluno.getRg(),
+                aluno.getMatricula(),
+                aluno.getNome(),
+                aluno.getNomeSocial(),
+                aluno.getDataDeNascimento(),
+                aluno.getEmail(),
+                aluno.getEndereco());
     }
 }
