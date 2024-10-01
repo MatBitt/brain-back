@@ -1,8 +1,8 @@
 package br.com.brain.controller;
 
 import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
@@ -15,11 +15,11 @@ import br.com.brain.domain.aluno.*;
 
 @RestController
 @RequestMapping("api/aluno")
+@RequiredArgsConstructor
 //@SecurityRequirement(name = "bearer-key")
 public class AlunoController {
 
-    @Autowired
-    private AlunoRepository repository;
+    private final AlunoRepository repository;
 
     @PostMapping
     @Transactional
@@ -27,7 +27,7 @@ public class AlunoController {
         var aluno = new Aluno(dados);
         repository.save(aluno);
 
-        var uri = uriBuilder.path("/alunos/{cpf}").buildAndExpand(aluno.getCpf()).toUri();
+        var uri = uriBuilder.path("/aluno/{cpf}").buildAndExpand(aluno.getCpf()).toUri();
 
         return ResponseEntity.created(uri).body(new DadosDetalhamentoAluno(aluno));
     }

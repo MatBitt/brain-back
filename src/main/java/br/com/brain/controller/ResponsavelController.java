@@ -1,7 +1,8 @@
 package br.com.brain.controller;
 
 import jakarta.validation.Valid;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
+
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
@@ -13,12 +14,12 @@ import org.springframework.web.util.UriComponentsBuilder;
 import br.com.brain.domain.responsavel.*;
 
 @RestController
+@RequiredArgsConstructor
 @RequestMapping("api/responsavel")
 //@SecurityRequirement(name = "bearer-key")
 public class ResponsavelController {
 
-    @Autowired
-    private ResponsavelRepository repository;
+    private final ResponsavelRepository repository;
 
     @PostMapping
     @Transactional
@@ -26,7 +27,7 @@ public class ResponsavelController {
         var responsavel = new Responsavel(dados);
         repository.save(responsavel);
 
-        var uri = uriBuilder.path("/responsavels/{cpf}").buildAndExpand(responsavel.getCpf()).toUri();
+        var uri = uriBuilder.path("/responsavel/{cpf}").buildAndExpand(responsavel.getCpf()).toUri();
 
         return ResponseEntity.created(uri).body(new DadosDetalhamentoResponsavel(responsavel));
     }

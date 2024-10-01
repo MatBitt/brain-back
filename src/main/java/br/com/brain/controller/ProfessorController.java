@@ -1,7 +1,8 @@
 package br.com.brain.controller;
 
 import jakarta.validation.Valid;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
+
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
@@ -14,11 +15,11 @@ import br.com.brain.domain.professor.*;
 
 @RestController
 @RequestMapping("api/professor")
+@RequiredArgsConstructor
 //@SecurityRequirement(name = "bearer-key")
 public class ProfessorController {
 
-    @Autowired
-    private ProfessorRepository repository;
+    private final ProfessorRepository repository;
 
     @PostMapping
     @Transactional
@@ -26,7 +27,7 @@ public class ProfessorController {
         var professor = new Professor(dados);
         repository.save(professor);
 
-        var uri = uriBuilder.path("/professors/{cpf}").buildAndExpand(professor.getCpf()).toUri();
+        var uri = uriBuilder.path("/professor/{cpf}").buildAndExpand(professor.getCpf()).toUri();
 
         return ResponseEntity.created(uri).body(new DadosDetalhamentoProfessor(professor));
     }

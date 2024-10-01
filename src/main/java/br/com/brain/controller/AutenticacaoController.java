@@ -1,7 +1,8 @@
 package br.com.brain.controller;
 
 import jakarta.validation.Valid;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
+
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -16,14 +17,13 @@ import br.com.brain.infra.security.DadosTokenJWT;
 import br.com.brain.service.TokenService;
 
 @RestController
+@RequiredArgsConstructor
 @RequestMapping("/login")
 public class AutenticacaoController {
 
-    @Autowired
-    private AuthenticationManager manager;
+    private final AuthenticationManager manager;
 
-    @Autowired
-    private TokenService tokenService;
+    private final TokenService tokenService;
 
     @PostMapping
     public ResponseEntity<DadosTokenJWT> efetuarLogin(@RequestBody @Valid DadosAutenticacao dados) {
