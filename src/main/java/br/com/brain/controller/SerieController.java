@@ -15,55 +15,49 @@ import br.com.brain.domain.serie.DadosAtualizacaoSerie;
 import br.com.brain.domain.serie.DadosCadastroSerie;
 import br.com.brain.domain.serie.DadosDetalhamentoSerie;
 import br.com.brain.domain.serie.DadosListagemSerie;
-import br.com.brain.domain.serie.Serie;
-import br.com.brain.domain.serie.SerieRepository;
+import br.com.brain.service.SerieService;
 
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("api/serie")
-//@SecurityRequirement(name = "bearer-key")
+// @SecurityRequirement(name = "bearer-key")
 public class SerieController {
 
-    private final SerieRepository repository;
+    private final SerieService service;
 
     @PostMapping
     @Transactional
-    public ResponseEntity<DadosDetalhamentoSerie> cadastrar(@RequestBody @Valid DadosCadastroSerie dados, UriComponentsBuilder uriBuilder) {
-        var serie = new Serie(dados);
-        repository.save(serie);
-
+    public ResponseEntity<DadosDetalhamentoSerie> cadastrar(@RequestBody @Valid DadosCadastroSerie dados,
+            UriComponentsBuilder uriBuilder) {
+        var serie = service.cadastrarSerie(dados);
         var uri = uriBuilder.path("/serie/{id}").buildAndExpand(serie.getId()).toUri();
-
         return ResponseEntity.created(uri).body(new DadosDetalhamentoSerie(serie));
     }
 
     @GetMapping
-    public ResponseEntity<Page<DadosListagemSerie>> listar(@PageableDefault(size = 10, sort = {"nome"}) Pageable paginacao) {
-        var page = repository.findAll(paginacao).map(DadosListagemSerie::new);
+    public ResponseEntity<Page<DadosListagemSerie>> listar(
+            @PageableDefault(size = 10, sort = { "nome" }) Pageable paginacao) {
+        var page = service.listar(paginacao);
         return ResponseEntity.ok(page);
     }
 
     @PutMapping
     @Transactional
     public ResponseEntity<DadosDetalhamentoSerie> atualizar(@RequestBody @Valid DadosAtualizacaoSerie dados) {
-        var serie = repository.findById(dados.id()).get();
-        serie.atualizarInformacoes(dados);
-
+        var serie = service.atualizar(dados);
         return ResponseEntity.ok(new DadosDetalhamentoSerie(serie));
     }
 
     @DeleteMapping("/{id}")
     @Transactional
     public ResponseEntity<DadosDetalhamentoSerie> excluir(@PathVariable Long id) {
-        var serie = repository.findById(id).get();
-        repository.delete(serie);
-
+        service.excluir(id);
         return ResponseEntity.noContent().build();
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<DadosDetalhamentoSerie> detalhar(@PathVariable Long id) {
-        var serie = repository.findById(id).get();
+        var serie = service.detalhar(id);
         return ResponseEntity.ok(new DadosDetalhamentoSerie(serie));
     }
 }

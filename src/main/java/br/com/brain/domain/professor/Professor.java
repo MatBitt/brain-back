@@ -1,9 +1,7 @@
 package br.com.brain.domain.professor;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.NoArgsConstructor;
 
 import java.sql.Date;
 
@@ -12,8 +10,6 @@ import br.com.brain.domain.endereco.Endereco;
 @Entity
 @Table(name = "professores")
 @Data
-@NoArgsConstructor
-@AllArgsConstructor
 public class Professor {
 
     @Id
@@ -37,38 +33,4 @@ public class Professor {
     private String cidadeNaturalidade;
     @Column(name = "carteira_de_trabalho")
     private String carteiraDeTrabalho;
-
-    public Professor (DadosCadastroProfessor dados) {
-        this.cpf = dados.cpf();
-        this.nome = dados.nome();
-        this.nomeSocial = dados.nomeSocial();
-        this.email = dados.email();
-        this.emailProfissional = dados.cpf() + "@gmail.com";
-        this.dataDeNascimento = dados.dataDeNascimento();
-        this.endereco = new Endereco(dados.endereco());
-        this.genero = dados.genero();
-        this.corRaca = dados.corRaca();
-        this.cidadeNaturalidade = dados.cidadeNaturalidade();
-        this.rg = dados.rg();
-        this.matricula = "M" + dados.cpf();
-        this.carteiraDeTrabalho = dados.carteiraDeTrabalho();
-    }
-
-    public void atualizarInformacoes(DadosAtualizacaoProfessor dados) {
-        if (dados.nome() != null) {
-            this.nome = dados.nome();
-        }
-        if (dados.dataDeNascimento() != null) {
-            this.dataDeNascimento = dados.dataDeNascimento();
-        }
-        if (dados.email() != null) {
-            this.email = dados.email();
-        }
-        if (dados.matricula() != null) {
-            this.matricula = dados.matricula();
-        }
-        if (dados.endereco() != null) {
-            this.endereco.atualizarInformacoes(dados.endereco());
-        }
-    }
 }

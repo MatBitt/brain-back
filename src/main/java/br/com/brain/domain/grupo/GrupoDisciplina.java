@@ -5,15 +5,11 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
-import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.NoArgsConstructor;
 
 @Entity
 @Table(name = "grupos_disciplinas")
 @Data
-@NoArgsConstructor
-@AllArgsConstructor
 public class GrupoDisciplina {
 
     @Id
@@ -21,18 +17,4 @@ public class GrupoDisciplina {
     private Long id;
     private String nome;
     private String area;
-
-    public GrupoDisciplina (DadosCadastroGrupoDisciplina dados) {
-        this.nome = dados.nome();
-        this.area = dados.area();
-    }
-
-    public void atualizarInformacoes(DadosAtualizacaoGrupoDisciplina dados) {
-        if (dados.nome() != null) {
-            this.nome = dados.nome();
-        }
-        if (dados.area() != null) {
-            this.area = dados.area();
-        }
-    }
 }

@@ -15,7 +15,6 @@ import br.com.brain.domain.disciplina.DadosAtualizacaoDisciplina;
 import br.com.brain.domain.disciplina.DadosCadastroDisciplina;
 import br.com.brain.domain.disciplina.DadosDetalhamentoDisciplina;
 import br.com.brain.domain.disciplina.DadosListagemDisciplina;
-import br.com.brain.domain.disciplina.Disciplina;
 import br.com.brain.service.DisciplinaService;
 
 @RestController
@@ -29,7 +28,7 @@ public class DisciplinaController {
     @PostMapping
     @Transactional
     public ResponseEntity<DadosDetalhamentoDisciplina> cadastrar(@RequestBody @Valid DadosCadastroDisciplina dados, UriComponentsBuilder uriBuilder) {
-        Disciplina disciplina = service.cadastrarDisciplina(dados);
+        var disciplina = service.cadastrarDisciplina(dados);
         var uri = uriBuilder.path("/disciplina/{id}").buildAndExpand(disciplina.getId()).toUri();
         return ResponseEntity.created(uri).body(new DadosDetalhamentoDisciplina(disciplina));
     }

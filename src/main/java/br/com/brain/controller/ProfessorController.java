@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import br.com.brain.domain.professor.*;
+import br.com.brain.service.ProfessorService;
 
 @RestController
 @RequestMapping("api/professor")
@@ -19,46 +20,39 @@ import br.com.brain.domain.professor.*;
 //@SecurityRequirement(name = "bearer-key")
 public class ProfessorController {
 
-    private final ProfessorRepository repository;
+    private final ProfessorService service;
 
     @PostMapping
     @Transactional
     public ResponseEntity<DadosDetalhamentoProfessor> cadastrar(@RequestBody @Valid DadosCadastroProfessor dados, UriComponentsBuilder uriBuilder) {
-        var professor = new Professor(dados);
-        repository.save(professor);
-
-        var uri = uriBuilder.path("/professor/{cpf}").buildAndExpand(professor.getCpf()).toUri();
-
+        var professor = service.cadastrarProfessor(dados);
+        var uri = uriBuilder.path("/professor/{matricula}").buildAndExpand(professor.getCpf()).toUri();
         return ResponseEntity.created(uri).body(new DadosDetalhamentoProfessor(professor));
     }
 
     @GetMapping
     public ResponseEntity<Page<DadosListagemProfessor>> listar(@PageableDefault(size = 10, sort = {"nome"}) Pageable paginacao) {
-        var page = repository.findAll(paginacao).map(DadosListagemProfessor::new);
+        var page = service.listar(paginacao);
         return ResponseEntity.ok(page);
     }
 
     @PutMapping
     @Transactional
     public ResponseEntity<DadosDetalhamentoProfessor> atualizar(@RequestBody @Valid DadosAtualizacaoProfessor dados) {
-        var professor = repository.getReferenceById(dados.cpf());
-        professor.atualizarInformacoes(dados);
-
+        var professor = service.atualizar(dados);
         return ResponseEntity.ok(new DadosDetalhamentoProfessor(professor));
     }
 
-    @DeleteMapping("/{cpf}")
+    @DeleteMapping("/{matricula}")
     @Transactional
-    public ResponseEntity<DadosDetalhamentoProfessor> excluir(@PathVariable String cpf) {
-        var professor = repository.getReferenceById(cpf);
-        repository.delete(professor);
-
+    public ResponseEntity<DadosDetalhamentoProfessor> excluir(@PathVariable String matricula) {
+        service.excluir(matricula);
         return ResponseEntity.noContent().build();
     }
 
-    @GetMapping("/{cpf}")
-    public ResponseEntity<DadosDetalhamentoProfessor> detalhar(@PathVariable String cpf) {
-        var professor = repository.getReferenceById(cpf);
+    @GetMapping("/{matricula}")
+    public ResponseEntity<DadosDetalhamentoProfessor> detalhar(@PathVariable String matricula) {
+        var professor = service.detalhar(matricula);
         return ResponseEntity.ok(new DadosDetalhamentoProfessor(professor));
     }
 

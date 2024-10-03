@@ -11,8 +11,6 @@ import br.com.brain.domain.endereco.DadosEndereco;
 
 public record DadosAtualizacaoAluno(
 
-        String cpf,
-        @NotBlank
         String matricula,
         @NotBlank
         String nome,

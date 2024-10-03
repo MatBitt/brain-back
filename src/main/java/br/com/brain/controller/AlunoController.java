@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import br.com.brain.domain.aluno.*;
+import br.com.brain.service.AlunoService;
 
 @RestController
 @RequestMapping("api/aluno")
@@ -19,46 +20,39 @@ import br.com.brain.domain.aluno.*;
 //@SecurityRequirement(name = "bearer-key")
 public class AlunoController {
 
-    private final AlunoRepository repository;
+    private final AlunoService service;
 
     @PostMapping
     @Transactional
     public ResponseEntity<DadosDetalhamentoAluno> cadastrar(@RequestBody @Valid DadosCadastroAluno dados, UriComponentsBuilder uriBuilder) {
-        var aluno = new Aluno(dados);
-        repository.save(aluno);
-
-        var uri = uriBuilder.path("/aluno/{cpf}").buildAndExpand(aluno.getCpf()).toUri();
-
+        var aluno = service.cadastrarAluno(dados);
+        var uri = uriBuilder.path("/aluno/{matricula}").buildAndExpand(aluno.getMatricula()).toUri();
         return ResponseEntity.created(uri).body(new DadosDetalhamentoAluno(aluno));
     }
 
     @GetMapping
     public ResponseEntity<Page<DadosListagemAluno>> listar(@PageableDefault(size = 10, sort = {"nome"}) Pageable paginacao) {
-        var page = repository.findAll(paginacao).map(DadosListagemAluno::new);
+        var page = service.listar(paginacao);
         return ResponseEntity.ok(page);
     }
 
     @PutMapping
     @Transactional
     public ResponseEntity<DadosDetalhamentoAluno> atualizar(@RequestBody @Valid DadosAtualizacaoAluno dados) {
-        var aluno = repository.getReferenceById(dados.cpf());
-        aluno.atualizarInformacoes(dados);
-
+        var aluno = service.atualizar(dados);
         return ResponseEntity.ok(new DadosDetalhamentoAluno(aluno));
     }
 
-    @DeleteMapping("/{cpf}")
+    @DeleteMapping("/{matricula}")
     @Transactional
-    public ResponseEntity<DadosDetalhamentoAluno> excluir(@PathVariable String cpf) {
-        var aluno = repository.getReferenceById(cpf);
-        repository.delete(aluno);
-
+    public ResponseEntity<DadosDetalhamentoAluno> excluir(@PathVariable String matricula) {
+        service.excluir(matricula);
         return ResponseEntity.noContent().build();
     }
 
-    @GetMapping("/{cpf}")
-    public ResponseEntity<DadosDetalhamentoAluno> detalhar(@PathVariable String cpf) {
-        var aluno = repository.getReferenceById(cpf);
+    @GetMapping("/{matricula}")
+    public ResponseEntity<DadosDetalhamentoAluno> detalhar(@PathVariable String matricula) {
+        var aluno = service.detalhar(matricula);
         return ResponseEntity.ok(new DadosDetalhamentoAluno(aluno));
     }
 
