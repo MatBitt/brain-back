@@ -18,7 +18,7 @@ create table professores(
     genero VARCHAR(100) NOT NULL,
     cor_raca VARCHAR(100) NOT NULL,
     cidade_naturalidade VARCHAR(100) NOT NULL,
-    carteira_de_trabalho VARCHAR(20) NOT NULL,
+    carteira_de_trabalho VARCHAR(20) NOT NULL UNIQUE,
 
     primary key(cpf)
 

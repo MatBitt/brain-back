@@ -1,11 +1,11 @@
 package br.com.brain.domain.disciplina;
 
-import br.com.brain.domain.grupo.GrupoDisciplina;
-
-public record DadosDetalhamentoDisciplina(String nome, String cargaHoraria, GrupoDisciplina grupo, String serie, String unidade) {
+public record DadosDetalhamentoDisciplina(String nome, String cargaHoraria, Long grupoId, Long serieId,
+        Long unidadeId) {
 
     public DadosDetalhamentoDisciplina(Disciplina disciplina) {
-        this(disciplina.getNome(), disciplina.getCargaHoraria(), disciplina.getGrupo(), disciplina.getSerie(),
-                disciplina.getUnidade());
+        this(disciplina.getNome(), disciplina.getCargaHoraria(), disciplina.getGrupo().getId(),
+                disciplina.getSerie().getId(),
+                disciplina.getUnidade().getId());
     }
 }

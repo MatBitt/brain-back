@@ -1,4 +1,4 @@
-package br.com.brain.domain.grupo;
+package br.com.brain.domain.unidade;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -10,29 +10,24 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Entity
-@Table(name = "grupos_disciplinas")
+@Table(name = "unidades")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class GrupoDisciplina {
+public class Unidade {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String nome;
-    private String area;
 
-    public GrupoDisciplina (DadosCadastroGrupoDisciplina dados) {
+    public Unidade(DadosCadastroUnidade dados) {
         this.nome = dados.nome();
-        this.area = dados.area();
     }
 
-    public void atualizarInformacoes(DadosAtualizacaoGrupoDisciplina dados) {
+    public void atualizarInformacoes(DadosAtualizacaoUnidade dados) {
         if (dados.nome() != null) {
             this.nome = dados.nome();
-        }
-        if (dados.area() != null) {
-            this.area = dados.area();
         }
     }
 }

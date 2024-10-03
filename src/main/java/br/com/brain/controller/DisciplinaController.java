@@ -16,7 +16,7 @@ import br.com.brain.domain.disciplina.DadosCadastroDisciplina;
 import br.com.brain.domain.disciplina.DadosDetalhamentoDisciplina;
 import br.com.brain.domain.disciplina.DadosListagemDisciplina;
 import br.com.brain.domain.disciplina.Disciplina;
-import br.com.brain.domain.disciplina.DisciplinaRepository;
+import br.com.brain.service.DisciplinaService;
 
 @RestController
 @RequiredArgsConstructor
@@ -24,46 +24,39 @@ import br.com.brain.domain.disciplina.DisciplinaRepository;
 //@SecurityRequirement(name = "bearer-key")
 public class DisciplinaController {
 
-    private final DisciplinaRepository repository;
+    private final DisciplinaService service;
 
     @PostMapping
     @Transactional
     public ResponseEntity<DadosDetalhamentoDisciplina> cadastrar(@RequestBody @Valid DadosCadastroDisciplina dados, UriComponentsBuilder uriBuilder) {
-        var disciplina = new Disciplina(dados);
-        repository.save(disciplina);
-
+        Disciplina disciplina = service.cadastrarDisciplina(dados);
         var uri = uriBuilder.path("/disciplina/{id}").buildAndExpand(disciplina.getId()).toUri();
-
         return ResponseEntity.created(uri).body(new DadosDetalhamentoDisciplina(disciplina));
     }
 
     @GetMapping
     public ResponseEntity<Page<DadosListagemDisciplina>> listar(@PageableDefault(size = 10, sort = {"nome"}) Pageable paginacao) {
-        var page = repository.findAll(paginacao).map(DadosListagemDisciplina::new);
+        var page = service.listar(paginacao);
         return ResponseEntity.ok(page);
     }
 
     @PutMapping
     @Transactional
     public ResponseEntity<DadosDetalhamentoDisciplina> atualizar(@RequestBody @Valid DadosAtualizacaoDisciplina dados) {
-        var disciplina = repository.findById(dados.id()).get();
-        disciplina.atualizarInformacoes(dados);
-
+        var disciplina = service.atualizar(dados);
         return ResponseEntity.ok(new DadosDetalhamentoDisciplina(disciplina));
     }
 
     @DeleteMapping("/{id}")
     @Transactional
     public ResponseEntity<DadosDetalhamentoDisciplina> excluir(@PathVariable Long id) {
-        var disciplina = repository.findById(id).get();
-        repository.delete(disciplina);
-
+        service.excluir(id);
         return ResponseEntity.noContent().build();
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<DadosDetalhamentoDisciplina> detalhar(@PathVariable Long id) {
-        var disciplina = repository.findById(id).get();
+        var disciplina = service.detalhar(id);
         return ResponseEntity.ok(new DadosDetalhamentoDisciplina(disciplina));
     }
 }

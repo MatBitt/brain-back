@@ -2,8 +2,7 @@ package br.com.brain.domain.professor;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
+import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.sql.Date;
@@ -12,10 +11,9 @@ import br.com.brain.domain.endereco.Endereco;
 
 @Entity
 @Table(name = "professores")
-@Getter
+@Data
 @NoArgsConstructor
 @AllArgsConstructor
-@EqualsAndHashCode(of = "cpf")
 public class Professor {
 
     @Id
