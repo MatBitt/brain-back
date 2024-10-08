@@ -10,6 +10,7 @@ import br.com.brain.domain.aluno.DadosListagemAluno;
 import br.com.brain.domain.aluno.Aluno;
 import br.com.brain.domain.aluno.AlunoRepository;
 import jakarta.persistence.EntityManager;
+import jakarta.persistence.EntityNotFoundException;
 import jakarta.persistence.PersistenceContext;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -55,7 +56,8 @@ public class AlunoService {
     }
 
     public Aluno atualizar(@Valid DadosAtualizacaoAluno dados) {
-        var aluno = repository.findByMatricula(dados.matricula());
+        var aluno = repository.findByMatricula(dados.matricula()).orElseThrow(
+                () -> new EntityNotFoundException("Aluno de matricula " + dados.matricula() + " não existe."));
 
         if (dados.nome() != null) {
             aluno.setNome(dados.nome());
@@ -77,15 +79,14 @@ public class AlunoService {
     }
 
     public void excluir(String matricula) {
-        var aluno = repository.findByMatricula(matricula);
+        var aluno = repository.findByMatricula(matricula).orElseThrow(
+                () -> new EntityNotFoundException("Aluno de matricula " + matricula + " não existe."));
         repository.delete(aluno);
     }
 
     public Aluno detalhar(String matricula) {
-        var aluno = repository.findByMatricula(matricula);
-        if (aluno == null) {
-            // TODO gerar excecao
-        }
+        var aluno = repository.findByMatricula(matricula).orElseThrow(
+                () -> new EntityNotFoundException("Aluno de matricula " + matricula + " não existe."));
         return aluno;
     }
 

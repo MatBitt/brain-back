@@ -10,6 +10,7 @@ import br.com.brain.domain.professor.DadosListagemProfessor;
 import br.com.brain.domain.professor.Professor;
 import br.com.brain.domain.professor.ProfessorRepository;
 import jakarta.persistence.EntityManager;
+import jakarta.persistence.EntityNotFoundException;
 import jakarta.persistence.PersistenceContext;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -55,7 +56,9 @@ public class ProfessorService {
     }
 
     public Professor atualizar(@Valid DadosAtualizacaoProfessor dados) {
-        var professor = repository.findByMatricula(dados.matricula());
+        var professor = repository.findByMatricula(dados.matricula()).orElseThrow(
+                () -> new EntityNotFoundException("Professor de matricula " + dados.matricula() + " não existe."));
+        ;
 
         if (dados.nome() != null) {
             professor.setNome(dados.nome());
@@ -77,12 +80,14 @@ public class ProfessorService {
     }
 
     public void excluir(String matricula) {
-        var professor = repository.findByMatricula(matricula);
+        var professor = repository.findByMatricula(matricula).orElseThrow(
+                () -> new EntityNotFoundException("Professor de matricula " + matricula + " não existe."));
         repository.delete(professor);
     }
 
     public Professor detalhar(String matricula) {
-        return repository.findByMatricula(matricula);
+        return repository.findByMatricula(matricula).orElseThrow(
+                () -> new EntityNotFoundException("Professor de matricula " + matricula + " não existe."));
     }
 
 }
